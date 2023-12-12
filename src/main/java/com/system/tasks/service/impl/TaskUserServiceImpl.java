@@ -54,9 +54,13 @@ public class TaskUserServiceImpl implements TaskUserService {
         if (registerUserDto.getPassword().length() < 5) {
             throw new IncorrectPasswordException("Пароль далжен содержать больше 5 символо");
         }
+        TaskUser user = taskUserRepository.findByEmail(registerUserDto.getEmail());
+        if (user != null) {
+            throw new InvalidMailException("email уже занят!");
+        }
         String password = passwordEncoder.encode(registerUserDto.getPassword());
 
-        TaskUser user = TaskUser.builder()
+        TaskUser user1 = TaskUser.builder()
                 .email(registerUserDto.getEmail())
                 .password(password)
                 .firstName(registerUserDto.getFirstName())
@@ -64,7 +68,7 @@ public class TaskUserServiceImpl implements TaskUserService {
                 .secondName(registerUserDto.getSecondName())
                 .build();
 
-        taskUserRepository.save(user);
+        taskUserRepository.save(user1);
 
 
     }

@@ -1,8 +1,11 @@
 package com.system.tasks.entity;
 
+import com.system.tasks.security.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "task_users")
@@ -30,4 +33,6 @@ public class TaskUser {
     String lastName;
     @Column(name = "second_name")
     String secondName;
+
+    Set<Role> rolesSet;
 }

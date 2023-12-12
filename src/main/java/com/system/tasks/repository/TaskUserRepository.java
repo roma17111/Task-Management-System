@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TaskUserRepository extends JpaRepository<TaskUser,Long> {
+
+    TaskUser findByEmail(String email);
 }
