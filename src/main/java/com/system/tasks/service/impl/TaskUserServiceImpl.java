@@ -38,6 +38,7 @@ public class TaskUserServiceImpl implements TaskUserService {
                 !isValidData(user.getSecondName())) {
             return false;
         }
+        return true;
     }
 
     @Override
