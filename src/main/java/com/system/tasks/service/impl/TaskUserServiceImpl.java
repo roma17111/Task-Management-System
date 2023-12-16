@@ -9,6 +9,9 @@ import com.system.tasks.repository.TaskUserRepository;
 import com.system.tasks.service.TaskUserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +73,13 @@ public class TaskUserServiceImpl implements TaskUserService {
 
         taskUserRepository.save(user1);
 
+    }
 
+    @Override
+    public TaskUser getAuthUser() {
+        SecurityContext holder = SecurityContextHolder.getContext();
+        Authentication authentication = holder.getAuthentication();
+        String email = authentication.getName();
+        return taskUserRepository.findByEmail(email);
     }
 }
