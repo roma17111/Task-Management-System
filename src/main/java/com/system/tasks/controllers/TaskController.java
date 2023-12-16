@@ -1,5 +1,6 @@
 package com.system.tasks.controllers;
 
+import com.system.tasks.dto.CreateTaskDto;
 import com.system.tasks.dto.TaskDto;
 import com.system.tasks.entity.Task;
 import com.system.tasks.mappers.TaskMapper;
@@ -10,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +28,6 @@ public class TaskController {
 
     private final TaskService taskService;
     private final TaskMapper taskMapper;
-
 
     @GetMapping("/{page}")
     @SecurityRequirement(name = "Bearer Authentication")
@@ -48,7 +50,7 @@ public class TaskController {
     @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @Operation(summary = "Посмотреть список задач",
-            description = "Данные контроллер позволяет постранично получить список задач " +
+            description = "Данные контроллер позволяет постранично получить список задач" +
                     "со вторым необязательным параметром"
     )
     @ApiResponses(value = {
@@ -79,7 +81,7 @@ public class TaskController {
     @GetMapping("/author/{pageNumber}")
     @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    @Operation(summary = "Посмотреть список задач",
+    @Operation(summary = "Посмотреть список задач конкретного автора",
             description = "Данные контроллер позволяет постранично получить список задач " +
                     "со вторым необязательным параметром"
     )
@@ -91,14 +93,35 @@ public class TaskController {
         return getAuthorTask(pageNumber, DEFAULT_SIZE_VALUE);
     }
 
-    private ResponseEntity<?> getAuthorTask(@PathVariable int pageNumber, int defaultSizeValue) {
+    @GetMapping("/new")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @Operation(summary = "Добавить задачу",
+            description = "Данные контроллер позволяет добавлять новое задание"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Запрос прошёл успешно"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> createTask(@RequestBody CreateTaskDto taskDto) {
+        try {
+            taskService.createTask(taskDto);
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+        return ResponseEntity.ok("Task added");
+    }
+
+    private ResponseEntity<?> getAuthorTask(@PathVariable int pageNumber,
+                                            int defaultSizeValue) {
         List<Task> tasks = null;
         try {
             tasks = taskService.getTaskByAuthor(pageNumber, defaultSizeValue);
         } catch (AuthException e) {
-            return ResponseEntity.status(401).body("Unauthorized");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
         List<TaskDto> taskDtos = taskMapper.mapAllToDto(tasks);
         return ResponseEntity.ok(taskDtos);
     }
+
 }

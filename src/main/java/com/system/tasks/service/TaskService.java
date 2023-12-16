@@ -1,5 +1,6 @@
 package com.system.tasks.service;
 
+import com.system.tasks.dto.CreateTaskDto;
 import com.system.tasks.entity.Task;
 import jakarta.security.auth.message.AuthException;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,4 +18,6 @@ public interface TaskService {
     List<Task> getTaskByAuthor(int pageNumber, int size) throws AuthException;
 
     Task findById(long id);
+
+    void createTask(CreateTaskDto taskDto) throws AuthException;
 }
