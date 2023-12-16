@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-@Slf4j
 public class AuthController {
 
     private final TaskUserService taskUserService;
@@ -65,7 +63,6 @@ public class AuthController {
         try {
             token = authService.login(authRequest);
         } catch (AuthException e) {
-            log.error(e.getMessage(),e);
             return ResponseEntity.status(400).body("Ошабка входа");
         }
         return ResponseEntity.ok(token);
@@ -85,7 +82,6 @@ public class AuthController {
         try {
             token = authService.getAccessToken(request.getRefreshToken());
         } catch (AuthException e) {
-            log.error(e.getMessage(),e);
             throw new RuntimeException(e);
         }
         return ResponseEntity.ok(token);
@@ -106,7 +102,6 @@ public class AuthController {
         try {
             token = authService.refresh(request.getRefreshToken());
         } catch (AuthException e) {
-            log.error(e.getMessage(),e);
             throw new RuntimeException(e);
         }
         return ResponseEntity.ok(token);

@@ -12,6 +12,7 @@ import com.system.tasks.mappers.TaskUserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -53,4 +54,12 @@ public class TaskMapperImpl implements TaskMapper {
                 .build();
     }
 
+    @Override
+    public List<TaskDto> mapAllToDto(List<Task> tasks) {
+        List<TaskDto> taskDtos = new ArrayList<>();
+        tasks.forEach(task -> {
+            taskDtos.add(mapToDto(task));
+        });
+        return taskDtos;
+    }
 }
