@@ -2,6 +2,8 @@ package com.system.tasks.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.system.tasks.enums.TaskPriority;
+import com.system.tasks.enums.TaskStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,8 +19,8 @@ public class TaskDto {
 
     String title;
     String description;
-    String taskStatus;
-    String taskPriority;
+    TaskStatus taskStatus;
+    TaskPriority taskPriority;
     TaskUserDto author;
     TaskUserDto executor;
     List<CommentDto> comments;
