@@ -12,8 +12,12 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -73,6 +77,16 @@ public class TaskUserServiceImpl implements TaskUserService {
 
         taskUserRepository.save(user1);
 
+    }
+
+    @Override
+    @Transactional
+    public TaskUser findById(long id) {
+        Optional<TaskUser> taskUser = taskUserRepository.findById(id);
+        if (taskUser.isEmpty()) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return taskUser.get();
     }
 
     @Override

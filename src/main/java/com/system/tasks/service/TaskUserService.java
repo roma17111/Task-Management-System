@@ -9,5 +9,7 @@ import com.system.tasks.exception.InvalidMailException;
 public interface TaskUserService {
     void register(RegisterUserDto user) throws InputDataException, InvalidMailException, IncorrectPasswordException;
 
+    TaskUser findById(long id);
+
     TaskUser getAuthUser();
 }

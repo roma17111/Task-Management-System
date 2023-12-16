@@ -1,8 +1,11 @@
 package com.system.tasks.controllers;
 
 import com.system.tasks.dto.CreateTaskDto;
+import com.system.tasks.dto.EditTaskDto;
 import com.system.tasks.dto.TaskDto;
 import com.system.tasks.entity.Task;
+import com.system.tasks.exception.EditTaskException;
+import com.system.tasks.exception.TaskInProcessException;
 import com.system.tasks.mappers.TaskMapper;
 import com.system.tasks.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +32,7 @@ public class TaskController {
     private final TaskService taskService;
     private final TaskMapper taskMapper;
 
-    @GetMapping("/{page}")
+    @GetMapping("/page/{page}")
     @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @Operation(summary = "Посмотреть список задач",
@@ -46,7 +49,7 @@ public class TaskController {
         return ResponseEntity.ok(taskDtos);
     }
 
-    @GetMapping("/{pageNumber}")
+    @GetMapping("/page/{pageNumber}")
     @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @Operation(summary = "Посмотреть список задач",
@@ -93,7 +96,7 @@ public class TaskController {
         return getAuthorTask(pageNumber, DEFAULT_SIZE_VALUE);
     }
 
-    @GetMapping("/new")
+    @PostMapping("/new")
     @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @Operation(summary = "Добавить задачу",
@@ -110,6 +113,84 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
         return ResponseEntity.ok("Task added");
+    }
+
+    @DeleteMapping("/remove")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @Operation(summary = "Удалить задачу по id из базы")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Запрос прошёл успешно"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "406", description = "Not accept")
+    })
+    public ResponseEntity<?> removeTask(@RequestParam long id) {
+        try {
+            taskService.deleteTaskById(id);
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Yor have not authenticated");
+        } catch (TaskInProcessException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Task already in process");
+        }
+        return ResponseEntity.ok("Task deleted");
+    }
+
+    @PutMapping("/edit")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @Operation(summary = "Редактировать задачу")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Запрос прошёл успешно"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<TaskDto> editTask(@RequestParam long id,
+                                            @RequestBody EditTaskDto task) {
+        TaskDto taskDto = null;
+        try {
+            taskDto = taskService.editTask(id, task);
+        } catch (EditTaskException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok().body(taskDto);
+    }
+
+    @PatchMapping("/executor")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @Operation(summary = "Добавить исполнителя к задаче")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Запрос прошёл успешно"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> addExecutorToTask(@RequestParam long taskId,
+                                                     @RequestParam long executorId) {
+        try {
+            taskService.addExecutorToTask(taskId,executorId);
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized");
+        } catch (EditTaskException e) {
+            return ResponseEntity.status(404).body("Executor not found");
+        }
+        return ResponseEntity.ok().body("Executor added!");
+    }
+
+    @PatchMapping("/executor/delete")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @Operation(summary = "Добавить исполнителя к задаче")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Запрос прошёл успешно"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> deleteExecutorToTask(@RequestParam long taskId) {
+        try {
+            taskService.deleteExecutorToTask(taskId);
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized");
+        } catch (EditTaskException e) {
+            return ResponseEntity.status(404).body("Executor not found");
+        }
+        return ResponseEntity.ok().body("Executor deleted!");
     }
 
     private ResponseEntity<?> getAuthorTask(@PathVariable int pageNumber,
