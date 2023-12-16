@@ -1,5 +1,6 @@
 package com.system.tasks.controllers;
 
+import com.system.tasks.dto.CommentDto;
 import com.system.tasks.dto.CreateTaskDto;
 import com.system.tasks.dto.EditTaskDto;
 import com.system.tasks.dto.TaskDto;
@@ -191,6 +192,26 @@ public class TaskController {
             return ResponseEntity.status(404).body("Executor not found");
         }
         return ResponseEntity.ok().body("Executor deleted!");
+    }
+
+    @PatchMapping("/comment")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @Operation(summary = "Добавить комментарий к задаче")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Запрос прошёл успешно"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> addCommentToTask(@RequestParam long taskId,
+                                              @RequestBody CommentDto commentDto) {
+        try {
+            taskService.addCommentToTask(taskId,commentDto);
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized");
+        } catch (EditTaskException e) {
+            return ResponseEntity.status(404).body("Task not found");
+        }
+        return ResponseEntity.ok().body("Comment added");
     }
 
     private ResponseEntity<?> getAuthorTask(@PathVariable int pageNumber,
