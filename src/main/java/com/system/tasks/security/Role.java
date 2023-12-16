@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 @Getter
 public enum Role implements GrantedAuthority {
 
-    BUYER("BUYER"),
+    USER("USER"),
     ADMIN("ADMIN")
     ;
 

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -45,5 +46,14 @@ public class Task {
     @OneToMany(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     List<Comment> comments;
+
+    public void addComment(Comment comment) {
+        if (comments == null) {
+            comments = new ArrayList<>();
+        }
+        if (!comments.contains(comment)) {
+            comments.add(comment);
+        }
+    }
 
 }

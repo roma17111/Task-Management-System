@@ -31,8 +31,6 @@ public class AuthController {
     private final TaskUserService taskUserService;
     private final AuthService authService;
 
-
-
     @PostMapping("/register")
     @ResponseBody
     @Operation(summary = "Регистрация пользователя")
@@ -52,7 +50,6 @@ public class AuthController {
         }
         return ResponseEntity.ok("Вы успешно зарегистрировались");
     }
-
 
     @PostMapping("/login")
     @Operation(summary = "Авторизоваться",
