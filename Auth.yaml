@@ -1,0 +1,119 @@
+openapi: "3.0.3"
+info:
+  title: "Tasks API"
+  description: "Tasks API"
+  version: "1.0.0"
+servers:
+  - url: "https://Tasks"
+paths:
+  /api/v1/register:
+    post:
+      summary: "Регистрация пользователя"
+      description: ""
+      operationId: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterUserDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/login:
+    post:
+      summary: "Авторизоваться"
+      description: "Данные контроллер принимает refresh token и возвращает новуый\
+        \ access token"
+      operationId: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JwtRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/token:
+    post:
+      summary: "Получить новый access токен"
+      description: "Данные контроллер принимает refresh token и возвращает новуый\
+        \ access token"
+      operationId: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshJwtRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/JwtResponse"
+  /api/v1/refresh:
+    post:
+      summary: "Получить новую пару access and refresh токенов"
+      description: "Данные контроллер принимает refresh token и возвращает новую п\
+        ару токенов"
+      operationId: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshJwtRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/JwtResponse"
+components:
+  schemas:
+    RegisterUserDto:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        secondName:
+          type: "string"
+        email:
+          type: "string"
+        password:
+          type: "string"
+    JwtRequest:
+      type: "object"
+      properties:
+        login:
+          type: "string"
+        password:
+          type: "string"
+    RefreshJwtRequest:
+      type: "object"
+      properties:
+        refreshToken:
+          type: "string"
+    JwtResponse:
+      type: "object"
+      properties:
+        type:
+          type: "string"
+        accessToken:
+          type: "string"
+        refreshToken:
+          type: "string"

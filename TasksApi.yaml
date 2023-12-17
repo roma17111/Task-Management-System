@@ -1,0 +1,307 @@
+openapi: "3.0.3"
+info:
+  title: "Tasks API"
+  description: "Tasks API"
+  version: "1.0.0"
+servers:
+  - url: "https://Tasks"
+paths:
+  /api/v1/task/page/{page}:
+    get:
+      summary: "Посмотреть список задач"
+      description: "Данные контроллер позволяет постранично получить список задач"
+      operationId: ""
+      parameters:
+        - name: "page"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+        - name: "size"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/task/page/{pageNumber}:
+    get:
+      summary: "Посмотреть список задач"
+      description: "Данные контроллер позволяет постранично получить список задачс\
+        о вторым необязательным параметром"
+      operationId: ""
+      parameters:
+        - name: "pageNumber"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/task/author/{page}:
+    get:
+      summary: "Посмотреть список задач конкретного автора"
+      description: "Данные контроллер позволяет постранично получить список задач"
+      operationId: ""
+      parameters:
+        - name: "page"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+        - name: "size"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/task/author/{pageNumber}:
+    get:
+      summary: "Посмотреть список задач конкретного автора"
+      description: "Данные контроллер позволяет постранично получить список задач\
+        \ со вторым необязательным параметром"
+      operationId: ""
+      parameters:
+        - name: "pageNumber"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/task/new:
+    post:
+      summary: "Добавить задачу"
+      description: "Данные контроллер позволяет добавлять новое задание"
+      operationId: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTaskDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/task/remove:
+    delete:
+      summary: "Удалить задачу по id из базы"
+      description: ""
+      operationId: ""
+      parameters:
+        - name: "id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/task/edit:
+    put:
+      summary: "Редактировать задачу"
+      description: ""
+      operationId: ""
+      parameters:
+        - name: "id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditTaskDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TaskDto"
+  /api/v1/task/executor:
+    patch:
+      summary: "Добавить исполнителя к задаче"
+      description: ""
+      operationId: ""
+      parameters:
+        - name: "taskId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "executorId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/task/executor/delete:
+    patch:
+      summary: "Добавить исполнителя к задаче"
+      description: ""
+      operationId: ""
+      parameters:
+        - name: "taskId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/task/comment:
+    patch:
+      summary: "Добавить комментарий к задаче"
+      description: ""
+      operationId: ""
+      parameters:
+        - name: "taskId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+components:
+  schemas:
+    CommentDto:
+      type: "object"
+      properties:
+        text:
+          type: "string"
+    CreateTaskDto:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+        description:
+          type: "string"
+        taskPriority:
+          type: "string"
+          enum:
+            - "TALL"
+            - "AVERAGE"
+            - "LOW"
+            - "name"
+        comment:
+          $ref: "#/components/schemas/CommentDto"
+    EditTaskDto:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+        description:
+          type: "string"
+        taskPriority:
+          type: "string"
+          enum:
+            - "TALL"
+            - "AVERAGE"
+            - "LOW"
+            - "name"
+    TaskUserDto:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        secondName:
+          type: "string"
+        email:
+          type: "string"
+    TaskDto:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+        description:
+          type: "string"
+        taskStatus:
+          type: "string"
+          enum:
+            - "WAITING"
+            - "IN_PROCESSED"
+            - "COMPLETED"
+            - "name"
+        taskPriority:
+          type: "string"
+          enum:
+            - "TALL"
+            - "AVERAGE"
+            - "LOW"
+            - "name"
+        author:
+          $ref: "#/components/schemas/TaskUserDto"
+        executor:
+          $ref: "#/components/schemas/TaskUserDto"
+        comments:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/CommentDto"
+  
