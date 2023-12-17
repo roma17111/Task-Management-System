@@ -5,11 +5,7 @@ spring:
       ddl-auto: update
     database: postgresql
     database-platform: org.hibernate.dialect.PostgresPlusDialect
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: "jdbc:postgresql://localhost/tasks"
-    username: "user"
-    password: "12345"
+
 jwt:
   secret:
     refresh: zL1HB3Pch05Avfynovxrf/kpF9O2m4NCWKJUjEp27s9J2jEG3ifiKCGylaZ8fDeoONSTJP/wAzKawB8F9rOMNg==

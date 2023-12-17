@@ -6,6 +6,7 @@ import com.system.tasks.exception.IncorrectPasswordException;
 import com.system.tasks.exception.InputDataException;
 import com.system.tasks.exception.InvalidMailException;
 import com.system.tasks.repository.TaskUserRepository;
+import com.system.tasks.security.Role;
 import com.system.tasks.service.TaskUserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -73,6 +75,7 @@ public class TaskUserServiceImpl implements TaskUserService {
                 .firstName(registerUserDto.getFirstName())
                 .lastName(registerUserDto.getLastName())
                 .secondName(registerUserDto.getSecondName())
+                .rolesSet(Set.of(Role.USER))
                 .build();
 
         taskUserRepository.save(user1);
