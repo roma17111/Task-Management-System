@@ -11,4 +11,8 @@ import org.springframework.context.annotation.Configuration;
         bearerFormat = "JWT",
         scheme = "bearer"
 )
-public class OpenAPI30Configuration {}
+public class OpenAPI30Configuration {
+    /**
+     * Конфигурация Security schema для Swagger-ui
+     */
+}

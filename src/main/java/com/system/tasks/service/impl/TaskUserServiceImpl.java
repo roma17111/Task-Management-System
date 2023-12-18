@@ -26,6 +26,11 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class TaskUserServiceImpl implements TaskUserService {
 
+    /**
+     * Данный класс поисывает логику
+     * User
+     */
+
     private final TaskUserRepository taskUserRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -33,6 +38,10 @@ public class TaskUserServiceImpl implements TaskUserService {
         return EmailValidator.getInstance().isValid(email);
     }
 
+
+    /**
+     * Проверка входищях данных на валидность
+     */
     private boolean isValidData(String data) {
         if (Objects.isNull(data) || data.isEmpty()) {
             return false;
@@ -45,6 +54,10 @@ public class TaskUserServiceImpl implements TaskUserService {
         return true;
     }
 
+    /**
+     * Проверяет валидность заполнения
+     * фамилия имя и отчество пользователем
+     */
     private boolean isValidFio(RegisterUserDto user) {
         if (!isValidData(user.getFirstName()) ||
                 !isValidData(user.getLastName()) ||
@@ -54,6 +67,10 @@ public class TaskUserServiceImpl implements TaskUserService {
         return true;
     }
 
+    /**
+     * Регистрация нового пользователя
+     * в системе.
+     */
     @Override
     public void register(RegisterUserDto registerUserDto) throws InputDataException,
             InvalidMailException,
@@ -103,4 +120,5 @@ public class TaskUserServiceImpl implements TaskUserService {
         String email = authentication.getName();
         return taskUserRepository.findByEmail(email);
     }
+
 }

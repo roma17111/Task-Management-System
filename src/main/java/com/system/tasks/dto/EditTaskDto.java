@@ -16,6 +16,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EditTaskDto {
 
+    /**
+     * Dto для изменения задачи
+     */
+
     String title;
     String description;
     TaskPriority taskPriority;

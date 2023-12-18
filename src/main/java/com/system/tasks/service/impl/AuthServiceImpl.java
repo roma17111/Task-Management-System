@@ -30,11 +30,9 @@ public class AuthServiceImpl implements AuthService {
     private final JwtProvider jwtProvider;
     private final PasswordEncoder encoder;
 
-
-    public List<TaskUser> findAll() {
-        return userRepository.findAll();
-    }
-
+    /**
+     * Описание логики авторизации пользователя
+     */
     @Override
     public JwtResponse login(@NonNull JwtRequest authRequest) throws AuthException {
         final TaskUser user = userRepository.findByEmail(authRequest.getLogin());
@@ -51,6 +49,10 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+
+    /**
+     * Получить активные JWT token
+     */
     @Override
     public JwtResponse getAccessToken(@NonNull String refreshToken) throws AuthException {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
@@ -69,6 +71,9 @@ public class AuthServiceImpl implements AuthService {
         return new JwtResponse(null, null);
     }
 
+    /**
+     * Обновление пары refresh and access token
+     */
     @Override
     public JwtResponse refresh(@NonNull String refreshToken) throws AuthException {
         if (jwtProvider.validateRefreshToken(refreshToken)) {

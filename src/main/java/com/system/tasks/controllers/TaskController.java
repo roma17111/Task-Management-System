@@ -6,6 +6,7 @@ import com.system.tasks.dto.EditTaskDto;
 import com.system.tasks.dto.TaskDto;
 import com.system.tasks.entity.Task;
 import com.system.tasks.exception.EditTaskException;
+import com.system.tasks.exception.InputDataException;
 import com.system.tasks.exception.TaskInProcessException;
 import com.system.tasks.mappers.TaskMapper;
 import com.system.tasks.service.TaskService;
@@ -210,6 +211,8 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized");
         } catch (EditTaskException e) {
             return ResponseEntity.status(404).body("Task not found");
+        } catch (InputDataException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Inncorect data");
         }
         return ResponseEntity.ok().body("Comment added");
     }

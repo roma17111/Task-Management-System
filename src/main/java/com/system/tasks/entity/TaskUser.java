@@ -16,6 +16,10 @@ import java.util.Set;
 @Builder(toBuilder = true)
 public class TaskUser {
 
+    /**
+     * Entity сущность пользователя для взаимодействия с БД
+     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")

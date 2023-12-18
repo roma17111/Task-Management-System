@@ -20,3 +20,7 @@
 
 git репозиторий
 <a href= https://github.com/roma17111/Task-Management-System>ссылка</a>
+
+### Доступ к api
+http://locallhost:8080/swagger-ui/index.html#
+

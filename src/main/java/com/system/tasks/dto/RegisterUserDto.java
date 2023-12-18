@@ -13,6 +13,10 @@ import lombok.experimental.FieldDefaults;
 @Builder(toBuilder = true)
 public class RegisterUserDto {
 
+    /**
+     * Dto для регистрации полльзователя
+     */
+
     String firstName;
     String lastName;
     String secondName;

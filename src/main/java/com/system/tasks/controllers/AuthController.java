@@ -20,15 +20,27 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
-
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class AuthController {
 
+    /**
+     * Данный контроллер служит
+     * для авторизации, регистрации пользователя
+     * и работы с JWT token
+     */
+
     private final TaskUserService taskUserService;
     private final AuthService authService;
 
+
+    /**
+     * Регистрация пользователя
+     * @param dto Контроллер принимает на вход dto
+     *            сущность с регистрационными данными
+     *            пользователя.
+     */
     @PostMapping("/register")
     @ResponseBody
     @Operation(summary = "Регистрация пользователя")
@@ -49,6 +61,12 @@ public class AuthController {
         return ResponseEntity.ok("Вы успешно зарегистрировались");
     }
 
+    /**
+     * Авторизация пользователя
+     * @param authRequest Контроллер принимает на вход
+     *                    dto сущность c логином и паролем
+     * @return token Возвращает access and refresh token
+     */
     @PostMapping("/login")
     @Operation(summary = "Авторизоваться",
             description = "Данные контроллер принимает refresh token и возвращает" +
@@ -68,6 +86,12 @@ public class AuthController {
         return ResponseEntity.ok(token);
     }
 
+    /**
+     * Авторизация пользователя
+     * @param request Контроллер принимает на вход
+     *                    dto сущность c refrech token
+     * @return token Возвращает валидный access token
+     */
     @PostMapping("/token")
     @Operation(summary = "Получить новый access токен",
             description = "Данные контроллер принимает refresh token и возвращает" +

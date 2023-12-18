@@ -18,6 +18,10 @@ import java.util.List;
 @Builder(toBuilder = true)
 public class Task {
 
+    /**
+     * Entity сущность задачи для взаимодействия с БД
+     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_id")

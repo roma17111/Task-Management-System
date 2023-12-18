@@ -8,10 +8,7 @@ import com.system.tasks.entity.Comment;
 import com.system.tasks.entity.Task;
 import com.system.tasks.entity.TaskUser;
 import com.system.tasks.enums.TaskStatus;
-import com.system.tasks.exception.EditTaskException;
-import com.system.tasks.exception.TaskDeleteException;
-import com.system.tasks.exception.TaskInProcessException;
-import com.system.tasks.exception.TaskNotFoundException;
+import com.system.tasks.exception.*;
 import com.system.tasks.mappers.CommentMapper;
 import com.system.tasks.mappers.TaskMapper;
 import com.system.tasks.repository.TaskRepository;
@@ -33,6 +30,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
+    /**
+     * Класс поисывает основную логик
+     * работы с задачами
+     */
+
     private final TaskUserService userService;
     private final TaskRepository taskRepository;
     private final CommentMapper commentMapper;
@@ -44,6 +46,13 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.save(task);
     }
 
+
+    /**
+     * Получение задач с постраничной пагинацией
+     *
+     * @param pageNumber номер страницы
+     * @param size       количество элементов на странице
+     */
     @Transactional
     @Override
     public List<Task> getTasks(int pageNumber, int size) {
@@ -51,6 +60,13 @@ public class TaskServiceImpl implements TaskService {
         return tasks.toList();
     }
 
+    /**
+     * Получение задач для конкретного авторизованного
+     * пользователя с постраничной пагинацией
+     *
+     * @param pageNumber номер страницы
+     * @param size       количество элементов на странице
+     */
     @Transactional
     @Override
     public List<Task> getTaskByAuthor(int pageNumber, int size) throws AuthException {
@@ -72,6 +88,9 @@ public class TaskServiceImpl implements TaskService {
         return task.get();
     }
 
+    /**
+     * Добавление задачи
+     */
     @Override
     public void createTask(CreateTaskDto taskDto) throws AuthException {
         TaskUser user = userService.getAuthUser();
@@ -92,6 +111,11 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.save(task);
     }
 
+    /**
+     * Удаление задачи из БД по id
+     *
+     * @param id ID задачи в БД
+     */
     @Override
     @Transactional
     public void deleteTaskById(long id) throws AuthException, TaskInProcessException {
@@ -165,10 +189,15 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public void addCommentToTask(long taskId, CommentDto commentDto) throws AuthException, EditTaskException {
+    public void addCommentToTask(long taskId, CommentDto commentDto) throws AuthException, EditTaskException, InputDataException {
         TaskUser user = userService.getAuthUser();
         if (user == null) {
             throw new AuthException("Auth error");
+        }
+        if (commentDto == null ||
+                commentDto.getText() == null ||
+                commentDto.getText().isEmpty()) {
+            throw new InputDataException();
         }
         Task task = getTaskById(taskId);
         TaskUser author = task.getAuthor();
@@ -179,7 +208,6 @@ public class TaskServiceImpl implements TaskService {
         task.addComment(comment);
         taskRepository.save(task);
     }
-
 
     private Task getTaskById(long id) {
         Optional<Task> task = taskRepository.findById(id);

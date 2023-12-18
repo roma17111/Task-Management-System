@@ -6,6 +6,7 @@ import com.system.tasks.dto.EditTaskDto;
 import com.system.tasks.dto.TaskDto;
 import com.system.tasks.entity.Task;
 import com.system.tasks.exception.EditTaskException;
+import com.system.tasks.exception.InputDataException;
 import com.system.tasks.exception.TaskInProcessException;
 import jakarta.security.auth.message.AuthException;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,5 +38,5 @@ public interface TaskService {
     void deleteExecutorToTask(long taskId) throws AuthException, EditTaskException;
 
     @Transactional
-    void addCommentToTask(long taskId, CommentDto commentDto) throws AuthException, EditTaskException;
+    void addCommentToTask(long taskId, CommentDto commentDto) throws AuthException, EditTaskException, InputDataException;
 }

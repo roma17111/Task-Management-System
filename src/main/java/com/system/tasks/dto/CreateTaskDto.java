@@ -13,6 +13,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateTaskDto {
 
+    /**
+     * Dto для добавления задачи
+     */
+
     String title;
     String description;
     TaskPriority taskPriority;

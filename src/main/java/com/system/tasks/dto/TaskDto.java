@@ -17,6 +17,11 @@ import java.util.List;
 @Builder(toBuilder = true)
 public class TaskDto {
 
+    /**
+     * Dto для представления сущности задачи
+     * для сервисов, взаимодействующих с api
+     */
+
     String title;
     String description;
     TaskStatus taskStatus;

@@ -13,6 +13,11 @@ import lombok.experimental.FieldDefaults;
 @Builder(toBuilder = true)
 public class TaskUserDto {
 
+    /**
+     * Dto для представления сущности пользователя
+     * для сервисов, взаимодействующих с api
+     */
+
     String firstName;
     String lastName;
     String secondName;

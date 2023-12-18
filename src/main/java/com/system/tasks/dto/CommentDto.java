@@ -13,5 +13,9 @@ import lombok.experimental.FieldDefaults;
 @Builder(toBuilder = true)
 public class CommentDto {
 
+    /**
+     * Dto для добавления комментария
+     */
+
     String text;
 }
