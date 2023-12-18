@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -33,6 +34,9 @@ public class TaskUserServiceImpl implements TaskUserService {
     }
 
     private boolean isValidData(String data) {
+        if (Objects.isNull(data) || data.isEmpty()) {
+            return false;
+        }
         for (int i = 0; i < data.length(); i++) {
             if (Character.isDigit(data.charAt(i))) {
                 return false;
